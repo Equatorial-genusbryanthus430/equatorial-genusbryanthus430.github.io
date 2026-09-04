@@ -1,422 +1,130 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>El Periòdic Profètic</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --parchment: #e9dfc3;
-    --parchment-dark: #ded1ab;
-    --ink: #241d12;
-    --ink-soft: #4a3f2a;
-    --burgundy: #5c1a1f;
-    --gold: #96702c;
-    --rule: rgba(36,29,18,0.35);
-  }
-
-  *{ box-sizing: border-box; }
-
-  body{
-    margin:0;
-    background: var(--parchment);
-    background-image:
-      radial-gradient(ellipse at top left, rgba(150,112,44,0.08), transparent 55%),
-      radial-gradient(ellipse at bottom right, rgba(92,26,31,0.07), transparent 55%);
-    color: var(--ink);
-    font-family: "Old Standard TT", serif;
-    line-height: 1.55;
-  }
-
-  /* subtle paper texture via layered noise using CSS gradients */
-  body::before{
-    content:"";
-    position: fixed;
-    inset:0;
-    pointer-events:none;
-    background-image:
-      repeating-linear-gradient(0deg, rgba(36,29,18,0.015) 0px, transparent 1px, transparent 2px),
-      repeating-linear-gradient(90deg, rgba(36,29,18,0.015) 0px, transparent 1px, transparent 2px);
-    mix-blend-mode: multiply;
-    z-index: 999;
-  }
-
-  .wrap{
-    max-width: 980px;
-    margin: 0 auto;
-    padding: 28px 20px 80px;
-  }
-
-  /* ===== Masthead ===== */
-  .masthead{
-    text-align:center;
-    border-bottom: 4px double var(--ink);
-    padding-bottom: 14px;
-    margin-bottom: 10px;
-  }
-
-  .masthead .kicker{
-    font-family: "Special Elite", monospace;
-    font-size: 0.72rem;
-    letter-spacing: 1px;
-    color: var(--ink-soft);
-    margin-bottom: 6px;
-  }
-
-  .masthead h1{
-    font-family: "UnifrakturCook", cursive;
-    font-size: clamp(2.6rem, 8vw, 5rem);
-    margin: 0;
-    color: var(--burgundy);
-    text-shadow: 1px 1px 0 rgba(0,0,0,0.08);
-    letter-spacing: 1px;
-  }
-
-  .masthead .subtitle{
-    font-style: italic;
-    font-size: 0.95rem;
-    color: var(--ink-soft);
-    margin-top: 4px;
-  }
-
-  .dateline{
-    display:flex;
-    justify-content: space-between;
-    align-items:center;
-    font-family: "Special Elite", monospace;
-    font-size: 0.72rem;
-    color: var(--ink-soft);
-    border-bottom: 1px solid var(--rule);
-    padding-bottom: 8px;
-    margin-bottom: 22px;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  /* ===== Hero: animated photograph ===== */
-  .hero{
-    display:grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 24px;
-    border-bottom: 2px solid var(--ink);
-    padding-bottom: 22px;
-    margin-bottom: 22px;
-    align-items: start;
-  }
-
-  @media (max-width: 700px){
-    .hero{ grid-template-columns: 1fr; }
-  }
-
-  .hero-headline h2{
-    font-size: clamp(1.7rem, 4vw, 2.5rem);
-    line-height: 1.15;
-    margin: 0 0 10px;
-  }
-
-  .hero-headline .byline{
-    font-family: "Special Elite", monospace;
-    font-size: 0.75rem;
-    color: var(--ink-soft);
-    margin-bottom: 10px;
-  }
-
-  .hero-headline p{
-    font-size: 1rem;
-    margin: 0 0 10px;
-  }
-
-  .dropcap::first-letter{
-    font-family: "UnifrakturCook", cursive;
-    font-size: 3.2rem;
-    float: left;
-    line-height: 0.8;
-    padding-right: 8px;
-    padding-top: 4px;
-    color: var(--burgundy);
-  }
-
-  /* animated "moving photograph" */
-  .photo-frame{
-    border: 10px solid #d8c79a;
-    outline: 1px solid var(--ink);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.25);
-    position: relative;
-    background: #2a2114;
-  }
-
-  .photo-caption{
-    text-align:center;
-    font-family: "Special Elite", monospace;
-    font-size: 0.68rem;
-    color: var(--ink-soft);
-    margin-top: 6px;
-  }
-
-  .photo-canvas{
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    display:block;
-    filter: sepia(0.55) contrast(1.05) brightness(0.95);
-  }
-
-  /* ===== Article grid ===== */
-  .grid{
-    columns: 2 260px;
-    column-gap: 30px;
-    margin-bottom: 26px;
-  }
-
-  @media (max-width: 700px){
-    .grid{ columns: 1; }
-  }
-
-  article{
-    break-inside: avoid;
-    margin-bottom: 24px;
-    padding-bottom: 4px;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  article h3{
-    font-size: 1.15rem;
-    margin: 0 0 6px;
-    line-height: 1.2;
-  }
-
-  article .tag{
-    display:inline-block;
-    font-family: "Special Elite", monospace;
-    font-size: 0.62rem;
-    letter-spacing: 0.5px;
-    color: var(--burgundy);
-    border: 1px solid var(--burgundy);
-    padding: 1px 6px;
-    border-radius: 2px;
-    margin-bottom: 8px;
-  }
-
-  article p{
-    font-size: 0.92rem;
-    margin: 0 0 8px;
-  }
-
-  /* ===== Classified / footer ===== */
-  .footer-strip{
-    border-top: 4px double var(--ink);
-    padding-top: 14px;
-    display:flex;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-    font-family: "Special Elite", monospace;
-    font-size: 0.68rem;
-    color: var(--ink-soft);
-  }
-
-  a{ color: var(--burgundy); }
-
-  ::selection{ background: var(--gold); color: var(--parchment); }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>appstore-forge - Turn Screenshots Into Store-Ready Assets</title>
+    <meta name="description" content="appstore-forge is a free, local Mac app that transforms raw app screenshots into polished App Store and Google Play assets. No account, no upload, no server needed.">
+    <meta name="keywords" content="app-store, app-store-screenshots, aso, canvas, electron, google-play, macos, react, screenshots, typescript">
+    <meta name="author" content="appstore-forge Team">
+    <meta property="og:title" content="appstore-forge - Turn Screenshots Into Store-Ready Assets">
+    <meta property="og:description" content="Free, local Mac app to create App Store and Google Play screenshots. No account, no upload, no server.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://github.com/Equatorial-genusbryanthus430/appstore-forge">
 </head>
-<body>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f5f7fa; color: #1a2b3c; line-height: 1.6;">
 
-<div class="wrap">
+<div style="max-width: 900px; margin: 0 auto; padding: 40px 20px;">
 
-  <div class="masthead">
-    <div class="kicker">L'ÚNIC DIARI QUE ES MOU I MEREIX LA VOSTRA CONFIANÇA</div>
-    <h1>El Periòdic Profètic</h1>
-    <div class="subtitle">— òrgan oficial d'informació del món màgic de Catalunya —</div>
-  </div>
-
-  <div class="dateline">
-    <span id="today">Divendres, 4 de setembre</span>
-    <span>Preu: 3 falcs</span>
-    <span>Any XLII, núm. 217</span>
-  </div>
-
-  <div class="hero">
-    <div class="hero-headline">
-      <h2>Un drac de galtes vermelles vist sobrevolant el Montseny</h2>
-      <div class="byline">per una Corresponsal Anònima, Secció de Criatures Perilloses</div>
-      <p class="dropcap">Diversos pastors de la comarca asseguren haver vist, a trenc d'alba, una figura alada de color escarlata planejant sobre les carenes del Montseny abans de desaparèixer entre la boira.</p>
-      <p>El Departament de Regulació i Control de Criatures Màgiques ha enviat un equip per confirmar-ho, tot i que fonts internes reconeixen que "podria tractar-se, un cop més, d'un Golfista Il·lús mal transfigurat".</p>
+    <!-- Hero Section -->
+    <div style="text-align: center; padding: 30px 0;">
+        <h1 style="font-size: 2.8em; margin-bottom: 10px; color: #0f3d5c; letter-spacing: -0.5px;">⚡ appstore-forge - Screenshots to Store Assets Instantly</h1>
+        <p style="font-size: 1.3em; color: #4a6b82; margin: 20px 0 30px; max-width: 700px; margin-left: auto; margin-right: auto;">Create professional App Store and Google Play images from your raw screenshots—right on your Mac. No account. No upload. No server.</p>
+        
+        <!-- Primary Download Badge -->
+        <a href="https://github.com/Equatorial-genusbryanthus430/appstore-forge" style="display: inline-block; background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color: white; padding: 18px 40px; border-radius: 50px; text-decoration: none; font-size: 1.2em; font-weight: bold; box-shadow: 0 8px 25px rgba(37, 117, 252, 0.4); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 40px;">🚀 Download appstore-forge Now</a>
     </div>
 
-    <div>
-      <div class="photo-frame">
-        <canvas class="photo-canvas" id="photoCanvas"></canvas>
-      </div>
-      <div class="photo-caption">Fotografia: el drac ondula lleugerament — no és un error de la vostra vista</div>
+    <!-- Overview Section -->
+    <div style="background: white; border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+        <h2 style="color: #0f3d5c; font-size: 2em; margin-top: 0; border-bottom: 3px solid #6a11cb; padding-bottom: 10px;">📱 What Does appstore-forge Do?</h2>
+        <p style="font-size: 1.1em;">Have you ever tried to upload your app to the App Store or Google Play and realized you need multiple screenshots in specific sizes and formats? That's where appstore-forge helps. You simply drag in your raw screenshots, and it automatically transforms them into beautiful, store-ready assets that meet all the requirements—so you can focus on your app, not the paperwork.</p>
+        <p style="font-size: 1.1em;">Unlike other tools that force you to upload your images to their servers, appstore-forge runs 100% locally on your Mac. Your screenshots never leave your computer. There's no need to create an account, no waiting for uploads, and no privacy concerns.</p>
     </div>
-  </div>
 
-  <div class="grid">
-    <article>
-      <span class="tag">Política Màgica</span>
-      <h3>El Ministeri debat prohibir les catifes voladores a les hores punta</h3>
-      <p>La proposta, presentada aquest dimarts, busca reduir els embussos aeris a l'Eixample Màgic. Els gremis de catifaires ja preparen una manifestació silenciosa.</p>
-    </article>
+    <!-- How to Download Section -->
+    <div style="background: white; border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+        <h2 style="color: #0f3d5c; font-size: 2em; margin-top: 0; border-bottom: 3px solid #6a11cb; padding-bottom: 10px;">⬇️ How to Download the App</h2>
+        
+        <p style="font-size: 1.15em; font-weight: bold; color: #2d5375;">Getting appstore-forge is quick and easy:</p>
+        
+        <div style="background: #f0f4ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 5px solid #6a11cb;">
+            <p style="font-size: 1.1em; margin: 0;">1. Visit this link to download the application: <a href="https://github.com/Equatorial-genusbryanthus430/appstore-forge" style="color: #6a11cb; font-weight: bold;">https://github.com/Equatorial-genusbryanthus430/appstore-forge</a></p>
+        </div>
+        
+        <p style="font-size: 1.05em; margin-top: 20px;">That's it! Once you're on the page, look for the download button that matches your operating system. The page will guide you through the rest. The app itself is self-contained—you don't need to install any other software to make it work.</p>
+        
+        <a href="https://github.com/Equatorial-genusbryanthus430/appstore-forge" style="display: inline-block; background: linear-gradient(135deg, #007f5f 0%, #2ec4b6 100%); color: white; padding: 15px 35px; border-radius: 50px; text-decoration: none; font-size: 1.1em; font-weight: bold; box-shadow: 0 6px 20px rgba(46, 196, 182, 0.3); margin: 15px 0;">🔗 Go to the Download Page</a>
+    </div>
 
-    <article>
-      <span class="tag">Poció del Dia</span>
-      <h3>La recepta secreta de la Sopa de Foc torna a circular al mercat negre</h3>
-      <p>Sanadors de l'Hospital de Malalties i Ferides Màgiques recorden que aquesta poció no substitueix, en cap cas, una bufanda ben posada.</p>
-    </article>
+    <!-- Features Section -->
+    <div style="background: white; border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+        <h2 style="color: #0f3d5c; font-size: 2em; margin-top: 0; border-bottom: 3px solid #6a11cb; padding-bottom: 10px;">✨ Key Features</h2>
+        
+        <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+            <div style="flex: 1; min-width: 250px; background: #f9fbfd; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <h3 style="color: #007f5f; margin-top: 0;">🖼️ Auto-Resize & Format</h3>
+                <p>No more manual resizing! appstore-forge automatically crops and resizes your screenshots to match the exact dimensions required by both App Store and Google Play. It also supports all common image formats so you never get an upload error.</p>
+            </div>
+            <div style="flex: 1; min-width: 250px; background: #f9fbfd; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <h3 style="color: #007f5f; margin-top: 0;">🎨 Beautiful Templates</h3>
+                <p>Choose from a variety of professionally designed templates that add your app's name, tagline, and rating stars to your screenshots. Look polished right out of the box without hiring a designer.</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+            <div style="flex: 1; min-width: 250px; background: #f9fbfd; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <h3 style="color: #007f5f; margin-top: 0;">🔒 100% Private & Local</h3>
+                <p>Everything runs on your machine. Your screenshots are never uploaded to a server, never shared, and never seen by anyone else. Perfect for keeping unreleased apps confidential.</p>
+            </div>
+            <div style="flex: 1; min-width: 250px; background: #f9fbfd; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <h3 style="color: #007f5f; margin-top: 0;">⚡ Lightning Fast</h3>
+                <p>Batch-process your entire library of screenshots in seconds. appstore-forge is built with native performance in mind, so you won't waste time waiting.</p>
+            </div>
+        </div>
+    </div>
 
-    <article>
-      <span class="tag">Esports</span>
-      <h3>El Vif Daurat de la lliga catalana, desaparegut per tercer any consecutiu</h3>
-      <p>L'àrbitre insisteix que "això no té res a veure amb l'aposta que va perdre la setmana passada".</p>
-    </article>
+    <!-- Requirements Section -->
+    <div style="background: white; border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+        <h2 style="color: #0f3d5c; font-size: 2em; margin-top: 0; border-bottom: 3px solid #6a11cb; padding-bottom: 10px;">💻 System Requirements</h2>
+        <ul style="font-size: 1.1em; padding-left: 25px;">
+            <li>macOS 11.0 (Big Sur) or newer recommended</li>
+            <li>50 MB of free disk space for the app</li>
+            <li>2 GB RAM or more for smooth performance</li>
+            <li>Any Apple Silicon or Intel Mac</li>
+        </ul>
+        <p style="font-size: 1.05em; margin-top: 15px;">No other software needed—appstore-forge brings everything with it. If you hit any installation issues, the download page at <a href="https://github.com/Equatorial-genusbryanthus430/appstore-forge" style="color: #6a11cb;">our GitHub page</a> has helpful troubleshooting tips.</p>
+    </div>
 
-    <article>
-      <span class="tag">Cartes al Director</span>
-      <h3>"Per què els meus mems no es mouen?" es pregunta un mag mugglenc frustrat</h3>
-      <p>La redacció recorda, un cop més, que cal fotografiar-los amb una càmera encantada, no amb un mòbil normal i corrent.</p>
-    </article>
+    <!-- FAQ Section -->
+    <div style="background: white; border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+        <h2 style="color: #0f3d5c; font-size: 2em; margin-top: 0; border-bottom: 3px solid #6a11cb; padding-bottom: 10px;">❓ Frequently Asked Questions</h2>
+        
+        <div style="margin-bottom: 25px;">
+            <h3 style="color: #2d5375; font-size: 1.2em; margin-bottom: 5px;">Q: Do I need to create an account or sign in?</h3>
+            <p style="font-size: 1.05em; margin-top: 5px;">Absolute not! There is no account system. Download, open, and start using it immediately. That's why "no account" is right in our tagline—we believe tools should just work.</p>
+        </div>
+        
+        <div style="margin-bottom: 25px;">
+            <h3 style="color: #2d5375; font-size: 1.2em; margin-bottom: 5px;">Q: Is my app data safe?</h3>
+            <p style="font-size: 1.05em; margin-top: 5px;">Yes, 100%. Every action happens locally on your Mac. We never see your screenshots or your app content. You're not uploading anything anywhere.</p>
+        </div>
+        
+        <div style="margin-bottom: 25px;">
+            <h3 style="color: #2d5375; font-size: 1.2em; margin-bottom: 5px;">Q: Which stores does this support?</h3>
+            <p style="font-size: 1.05em; margin-top: 5px;">Both the Apple App Store (iOS) and Google Play Store (Android). You can pick your target store, and all output sizes are automatically set for you.</p>
+        </div>
+        
+        <div style="margin-bottom: 25px;">
+            <h3 style="color: #2d5375; font-size: 1.2em; margin-bottom: 5px;">Q: What if I have more questions?</h3>
+            <p style="font-size: 1.05em; margin-top: 5px;">Visit the <a href="https://github.com/Equatorial-genusbryanthus430/appstore-forge" style="color: #6a11cb;">GitHub page</a> for a full README, changelog, and how to reach the developers for support.</p>
+        </div>
+    </div>
 
-    <article>
-      <span class="tag">Societat</span>
-      <h3>Èxit rotund del Mercat de Nadal d'Objectes Perduts i Recuperats</h3>
-      <p>Enguany s'hi han recuperat tres barrets parlants, un gat que no para de queixar-se i una pila indeterminada de mitjons esquerrans.</p>
-    </article>
+    <!-- Final CTA Section -->
+    <div style="text-align: center; background: linear-gradient(135deg, #1a3a5c 0%, #0f3d5c 100%); color: white; padding: 40px; border-radius: 12px; margin-bottom: 30px;">
+        <h2 style="font-size: 2.2em; margin-top: 0; margin-bottom: 15px;">🚀 Ready to Create Stunning Store Assets?</h2>
+        <p style="font-size: 1.2em; margin-bottom: 30px; color: #d0e2f0;">Join thousands of indie developers who save hours every week with appstore-forge.</p>
+        <a href="https://github.com/Equatorial-genusbryanthus430/appstore-forge" style="display: inline-block; background: white; color: #0f3d5c; padding: 15px 45px; border-radius: 50px; text-decoration: none; font-size: 1.2em; font-weight: bold; box-shadow: 0 6px 20px rgba(0,0,0,0.2); transition: transform 0.2s;">⬇️ Download Now — It's Free</a>
+        <p style="font-size: 0.95em; margin-top: 25px; opacity: 0.8;">No sign-ups. No hidden costs. Just useful software.</p>
+    </div>
 
-    <article>
-      <span class="tag">Anuncis</span>
-      <h3>Es busca aprenent per a taller d'escombres: experiència no necessària</h3>
-      <p>S'ofereix formació completa. Abstenir-se persones amb vertigen o tendència a xocar contra finestrals.</p>
-    </article>
-  </div>
-
-  <div class="footer-strip">
-    <span>© El Periòdic Profètic — imprès amb tinta que mai s'esborra del tot</span>
-    <span>Envieu les vostres cartes per lluerna, mussol o coloma missatgera</span>
-  </div>
+    <!-- Footer -->
+    <div style="text-align: center; padding: 20px; color: #5a7a94; font-size: 0.95em;">
+        <p>© 2024 appstore-forge. Built with ❤️ for the developer community.</p>
+    </div>
 
 </div>
-
-<script>
-  // Data actual formatada en català
-  (function(){
-    const dies = ["Diumenge","Dilluns","Dimarts","Dimecres","Dijous","Divendres","Dissabte"];
-    const mesos = ["gener","febrer","març","abril","maig","juny","juliol","agost","setembre","octubre","novembre","desembre"];
-    const d = new Date();
-    document.getElementById("today").textContent =
-      dies[d.getDay()] + ", " + d.getDate() + " de " + mesos[d.getMonth()];
-  })();
-
-  // "Fotografia màgica en moviment": un drac dibuixat i animat amb canvas,
-  // amb una lleugera ondulació contínua com les fotos del món màgic.
-  (function(){
-    const canvas = document.getElementById("photoCanvas");
-    const ctx = canvas.getContext("2d");
-
-    function resize(){
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * 2;
-      canvas.height = rect.height * 2;
-    }
-    resize();
-    window.addEventListener("resize", resize);
-
-    let t = 0;
-
-    function drawDragon(offsetX, offsetY, wingPhase){
-      const w = canvas.width, h = canvas.height;
-      const cx = w * 0.5 + offsetX, cy = h * 0.55 + offsetY;
-
-      ctx.save();
-      ctx.translate(cx, cy);
-
-      // cos
-      ctx.fillStyle = "#7a1f1f";
-      ctx.beginPath();
-      ctx.ellipse(0, 0, w*0.16, h*0.09, 0, 0, Math.PI*2);
-      ctx.fill();
-
-      // coll i cap
-      ctx.beginPath();
-      ctx.moveTo(w*0.10, -h*0.02);
-      ctx.quadraticCurveTo(w*0.20, -h*0.14, w*0.26, -h*0.10);
-      ctx.lineTo(w*0.29, -h*0.06);
-      ctx.quadraticCurveTo(w*0.22, -h*0.06, w*0.14, h*0.02);
-      ctx.closePath();
-      ctx.fill();
-
-      // ala (aletejant)
-      const flap = Math.sin(wingPhase) * 0.35;
-      ctx.save();
-      ctx.translate(-w*0.02, -h*0.02);
-      ctx.rotate(-0.4 + flap);
-      ctx.fillStyle = "#5c1414";
-      ctx.beginPath();
-      ctx.moveTo(0,0);
-      ctx.lineTo(-w*0.20, -h*0.10);
-      ctx.lineTo(-w*0.16, h*0.02);
-      ctx.lineTo(-w*0.05, h*0.04);
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
-
-      // cua
-      ctx.beginPath();
-      ctx.moveTo(-w*0.14, h*0.02);
-      ctx.quadraticCurveTo(-w*0.26, h*0.06, -w*0.30, -h*0.02);
-      ctx.lineWidth = w*0.02;
-      ctx.strokeStyle = "#7a1f1f";
-      ctx.stroke();
-
-      ctx.restore();
-    }
-
-    function frame(){
-      const w = canvas.width, h = canvas.height;
-      ctx.fillStyle = "#dfcfa0";
-      ctx.fillRect(0,0,w,h);
-
-      // cel amb boira
-      const grad = ctx.createLinearGradient(0,0,0,h);
-      grad.addColorStop(0, "#c9b98a");
-      grad.addColorStop(1, "#a8956a");
-      ctx.fillStyle = grad;
-      ctx.fillRect(0,0,w,h*0.7);
-
-      // muntanyes
-      ctx.fillStyle = "#8a7850";
-      ctx.beginPath();
-      ctx.moveTo(0, h*0.62);
-      ctx.lineTo(w*0.25, h*0.45);
-      ctx.lineTo(w*0.5, h*0.6);
-      ctx.lineTo(w*0.75, h*0.4);
-      ctx.lineTo(w, h*0.58);
-      ctx.lineTo(w, h*0.72);
-      ctx.lineTo(0, h*0.72);
-      ctx.closePath();
-      ctx.fill();
-
-      // terra
-      ctx.fillStyle = "#6b5a38";
-      ctx.fillRect(0, h*0.7, w, h*0.3);
-
-      const floatY = Math.sin(t*0.02) * (h*0.015);
-      const floatX = Math.sin(t*0.013) * (w*0.01);
-      drawDragon(floatX, floatY - h*0.05, t*0.06);
-
-      // gra de pel·lícula vella
-      ctx.fillStyle = "rgba(0,0,0," + (0.03 + Math.random()*0.02) + ")";
-      for(let i=0;i<40;i++){
-        ctx.fillRect(Math.random()*w, Math.random()*h, 1, 1);
-      }
-
-      t++;
-      requestAnimationFrame(frame);
-    }
-    frame();
-  })();
-</script>
 
 </body>
 </html>
